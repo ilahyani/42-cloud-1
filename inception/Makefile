@@ -1,6 +1,8 @@
 all: up
 
 up:
+	@mkdir -p /tmp/data/mariadb
+	@mkdir -p /tmp/data/wordpress
 	@docker compose up --build
 
 down:
