@@ -36,3 +36,4 @@ override.tf.json
 .terraform*
 terraform.rc
 .env
+*.pem

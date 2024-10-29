@@ -1,7 +1,7 @@
 resource "aws_instance" "inception" {
   ami                    = "ami-005fc0f236362e99f"
   instance_type          = "t2.micro"
-  vpc_security_group_ids = [aws_security_group.allow_ssh.id]
+  vpc_security_group_ids = [aws_security_group.allow_connection.id]
   key_name               = aws_key_pair.inception_key.key_name
 
   provisioner "file" {
@@ -15,7 +15,7 @@ resource "aws_instance" "inception" {
       private_key = file(local_file.private_key_pem.filename)
     }
   }
-
+  
   tags = {
     Name = "inception"
   }
@@ -23,8 +23,8 @@ resource "aws_instance" "inception" {
   depends_on = [local_file.private_key_pem]
 }
 
-resource "aws_security_group" "allow_ssh" {
-  name_prefix = "allow_ssh"
+resource "aws_security_group" "allow_connection" {
+  name_prefix = "allow_connection"
 
   ingress {
     from_port   = 22
@@ -70,6 +70,14 @@ resource "null_resource" "set_permissions" {
   }
 
   depends_on = [local_file.private_key_pem]
+}
+
+resource "null_resource" "export_ip" {
+  provisioner "local-exec" {
+    command = "export INSTANCE_IP=${aws_instance.inception.public_ip}"
+  }
+
+  depends_on = [aws_instance.inception]
 }
 
 output "public_ip" {
