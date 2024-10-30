@@ -1,5 +1,8 @@
 #! /bin/bash
 
+set -e
+trap 'echo "Deployment Failed. Exiting..."; exit 1;' ERR
+
 apt-get update && apt-get upgrade -y
 apt-get install -y wget unzip openssh-client
 
@@ -32,4 +35,4 @@ ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i infrastructur
     sudo make -C inception
 EOF
 
-echo "DEPLOYED TO ~> https://${INSTANCE_IP}"
+echo "DEPLOYED TO ~> https://${INSTANCE_IP}:443"
