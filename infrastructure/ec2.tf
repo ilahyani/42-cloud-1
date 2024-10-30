@@ -72,14 +72,6 @@ resource "null_resource" "set_permissions" {
   depends_on = [local_file.private_key_pem]
 }
 
-resource "null_resource" "export_ip" {
-  provisioner "local-exec" {
-    command = "export INSTANCE_IP=${aws_instance.inception.public_ip}"
-  }
-
-  depends_on = [aws_instance.inception]
-}
-
 output "public_ip" {
   value = aws_instance.inception.public_ip
 }
