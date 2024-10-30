@@ -1,2 +1,8 @@
 all:
-	docker run -it -v "$(pwd)":/cloud --env-file .env ubuntu:latest bash -c "bash /cloud/init.sh"
+	docker run -it -v "$(PWD)":/cloud --env-file .env --name ubuntu ubuntu:latest bash -c "bash /cloud/init.sh"
+
+stop:
+	docker stop ubuntu
+
+clean:
+	docker rm -f ubuntu
