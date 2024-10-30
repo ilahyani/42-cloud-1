@@ -9,8 +9,7 @@ down:
 clean: down
 	@docker images -q | xargs docker rmi -f
 	@docker volume ls -q | xargs docker volume rm
-	@rm -rf ./data/wordpress/*
-	@rm -rf ./data/mariadb/*
+	@rm -rf ./data
 
 re: clean all
 
