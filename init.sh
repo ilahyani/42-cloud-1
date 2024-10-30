@@ -1,7 +1,7 @@
 #! /bin/bash
 
 apt-get update && apt-get upgrade -y
-apt-get install -y wget unzip ssh
+apt-get install -y wget unzip openssh-client
 
 cd /tmp
 
@@ -22,13 +22,14 @@ aws configure set region "$AWS_REGION"
 cd /cloud/infrastructure
 terraform init
 terraform apply --auto-approve -var="aws_access_key=$AWS_ACCESS_KEY_ID" -var="aws_secret_key=$AWS_SECRET_ACCESS_KEY"
+export INSTANCE_IP=$(terraform output -raw public_ip)
 
 cd /cloud
 scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i infrastructure/aws_ec2_key.pem inception/.env ubuntu@${INSTANCE_IP}:.env
-ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i infrastructure/aws_ec2_key.pem ubuntu@${INSTANCE_IP} << 'EOF'
+ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i infrastructure/aws_ec2_key.pem ubuntu@${INSTANCE_IP} << EOF
     sudo snap install docker
     sudo apt install make
     sudo make -C inception
 EOF
 
-exec bash
+echo "DEPLOYED TO ~> https://${INSTANCE_IP}"
