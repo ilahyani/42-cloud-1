@@ -1,5 +1,7 @@
+n ?= 1
+
 all:
-	docker run -it -v "$(PWD)":/cloud --env-file .env --name ubuntu ubuntu:latest bash /cloud/init.sh
+	docker run -it -v "$(PWD)":/cloud --env-file .env --name ubuntu ubuntu:latest bash /cloud/init.sh $(n)
 
 clean:
 	docker rm -f ubuntu

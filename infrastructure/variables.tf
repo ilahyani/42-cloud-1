@@ -6,6 +6,8 @@ variable "aws_secret_key" {
   type = string
 }
 
-# # variable "ip_address" {
-# #   type = list(string)
-# # }
+variable "instance_count" {
+  description = "Number of instances to create"
+  type        = number
+  default     = 1
+}
