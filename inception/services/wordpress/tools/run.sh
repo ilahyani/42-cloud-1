@@ -16,9 +16,9 @@ chmod -R 755 /var/www/html
 cp /var/www/html/wp-config-sample.php /var/www/html/wp-config.php
 
 sed -i "s/database_name_here/${DATABASE}/" /var/www/html/wp-config.php
-sed -i "s/username_here/${USER}/" /var/www/html/wp-config.php
-sed -i "s/password_here/${USER_PASSWD}/" /var/www/html/wp-config.php
-sed -i "s/localhost/${WORDPRESS_DB_HOST}/" /var/www/html/wp-config.php
+sed -i "s/username_here/${MYSQL_USER}/" /var/www/html/wp-config.php
+sed -i "s/password_here/${MYSQL_PASSWORD}/" /var/www/html/wp-config.php
+sed -i "s/localhost/${PMA_HOST}/" /var/www/html/wp-config.php
 
 curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
 mv wp-cli.phar /usr/local/bin/wp

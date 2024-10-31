@@ -7,7 +7,6 @@ down:
 	@docker compose down
 
 clean: down
-	@docker images -q | xargs docker rmi -f
 	@docker volume ls -q | xargs docker volume rm
 	@rm -rf ./data
 
