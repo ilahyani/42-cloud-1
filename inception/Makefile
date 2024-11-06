@@ -1,7 +1,7 @@
 all: up
 
 up:
-	@mkdir -p ./data/mariadb && mkdir -p ./data/wordpress && docker compose up --build -d
+	@mkdir -p ./data/mariadb ./data/wordpress && docker compose up --build -d
 
 down:
 	@docker compose down
