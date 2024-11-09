@@ -1,0 +1,13 @@
+# Configuration file version
+apiVersion: 1
+
+datasources:
+  - name: cloudwatch
+    type: cloudwatch
+    editable: true
+    jsonData:
+      authType: keys
+      defaultRegion: ${AWS_REGION}
+    secureJsonData:
+      accessKey: ${GF_ACCESS_KEY_ID}
+      secretKey: ${GF_SECRET_ACCESS_KEY}

@@ -3,7 +3,6 @@ resource "aws_instance" "inception" {
   instance_type          = "t2.micro"
   vpc_security_group_ids = [aws_security_group.allow_connection.id]
   key_name               = aws_key_pair.inception_key.key_name
-  count                  = var.instance_count
 
   provisioner "file" {
     source      = "../inception"
@@ -81,5 +80,10 @@ resource "null_resource" "set_permissions" {
 }
 
 output "public_ip" {
-  value = [for instance in aws_instance.inception : instance.public_ip]
+  value = aws_instance.inception.public_ip
+}
+
+
+output "instance_id" {
+  value = aws_instance.inception.id
 }

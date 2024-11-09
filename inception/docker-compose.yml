@@ -48,7 +48,7 @@ services:
         image: prom/mysqld-exporter:main
         env_file: .env
         volumes:
-          - "${PWD}/services/prometheus/mariadb:/home"
+          - "./services/prometheus/mariadb:/home"
         networks:
           - inception
         depends_on:
@@ -60,7 +60,7 @@ services:
         ports:
           - 9090:9090
         volumes:
-          - "${PWD}/services/prometheus:/config"
+          - "./services/prometheus:/config"
         networks:
           - inception
         restart: always
@@ -75,10 +75,11 @@ services:
         networks:
           - inception
         volumes:
-          - "${PWD}/services/grafana/admin_pass:/etc/secrets/admin_pass"
-          - "${PWD}/services/grafana/dashboards/providers:/etc/grafana/provisioning/dashboards"
-          - "${PWD}/services/grafana/dashboards/files:/var/lib/grafana/dashboards"
-          - "${PWD}/services/grafana/datasources:/etc/grafana/provisioning/datasources"
+          - "./services/grafana/admin_pass:/etc/secrets/admin_pass"
+          - "./services/grafana/default_home_dashboard_path:/etc/config/default_home_dashboard_path"
+          - "./services/grafana/dashboards/providers:/etc/grafana/provisioning/dashboards"
+          - "./services/grafana/dashboards/files:/var/lib/grafana/dashboards"
+          - "./services/grafana/datasources:/etc/grafana/provisioning/datasources"
         restart: always
 
 volumes:
@@ -87,13 +88,13 @@ volumes:
       driver_opts:
         type: none
         o: bind
-        device: "${PWD}/data/mariadb"
+        device: "./data/mariadb"
     wp_data:
       driver: local
       driver_opts:
         type: none
         o: bind
-        device: "${PWD}/data/wordpress"
+        device: "./data/wordpress"
 
 networks:
     inception:

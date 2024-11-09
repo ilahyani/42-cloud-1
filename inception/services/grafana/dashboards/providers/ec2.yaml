@@ -1,0 +1,6 @@
+apiVersion: 1
+
+providers:
+- name: 'EC2'
+  options:
+    path: /var/lib/grafana/dashboards/ec2.json
