@@ -38,6 +38,8 @@
     ```sh
     vagrant up
     ```
+4. **Open in browser**: After the deployment is done, you will see this message:
+    ```DEPLOYED TO ~> https://X.X.X.X``` open the link in the browser to get the wordpress website (you might a 502 error in the beginning as wordpress takes some time to start). To access Grafana open the same IP with http and port 3000.
 
 ### Stopping and Cleaning Up
 
@@ -45,6 +47,7 @@
     ```sh
     vagrant ssh
     sudo bash /cloud/destroy.sh
+    exit
     ```
 2. **Stop and destroy Vagrant VM**:
     ```sh
