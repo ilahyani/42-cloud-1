@@ -1,7 +1,0 @@
-# # config file version
-apiVersion: 1
-
-providers:
-- name: 'NGINX'
-  options:
-    path: /var/lib/grafana/dashboards/nginx.json

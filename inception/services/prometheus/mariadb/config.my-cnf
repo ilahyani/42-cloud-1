@@ -1,4 +1,0 @@
-[client]
-user = exporter
-password = exporterpass
-host = mariadb

@@ -1,8 +1,0 @@
-# Configuration file version
-apiVersion: 1
-
-datasources:
-  - name: Prometheus
-    type: prometheus
-    editable: true
-    url: http://prometheus:9090

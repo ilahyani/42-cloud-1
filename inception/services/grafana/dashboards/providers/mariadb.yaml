@@ -1,6 +1,0 @@
-apiVersion: 1
-
-providers:
-- name: 'MARIADB'
-  options:
-    path: /var/lib/grafana/dashboards/mariadb.json
