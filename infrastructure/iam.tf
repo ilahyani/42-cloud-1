@@ -64,6 +64,7 @@ resource "aws_iam_access_key" "gf_user_access_key" {
 
 output "access_key_id" {
   value = aws_iam_access_key.gf_user_access_key.id
+  sensitive = true
 }
 
 output "secret_access_key" {
