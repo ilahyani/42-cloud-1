@@ -1,0 +1,77 @@
+- name: Get Data From Localhost
+  hosts: localhost
+  become: true
+  gather_facts: false
+  vars:
+    AWS_ACCESS_KEY_ID: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
+    AWS_SECRET_ACCESS_KEY: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
+    AWS_REGION: "{{ lookup('env', 'AWS_REGION') }}"
+  environment:
+    AWS_ACCESS_KEY_ID: "{{ AWS_ACCESS_KEY_ID }}"
+    AWS_SECRET_ACCESS_KEY: "{{ AWS_SECRET_ACCESS_KEY }}"
+    AWS_REGION: "{{ AWS_REGION }}"
+  tasks:
+    - name: Initialize Terraform (if needed)
+      community.general.terraform:
+        project_path: "{{ playbook_dir }}/../"
+        state: present
+        workspace: default
+      register: terraform_init
+    - name: Get Terraform outputs
+      community.general.terraform:
+        project_path: "{{ playbook_dir }}/../"
+        state: present
+        workspace: default
+      register: terraform_outputs
+    - name: Set variables from Terraform outputs
+      set_fact:
+        instance_ip: "{{ terraform_outputs.outputs.public_ip.value }}"
+        instance_id: "{{ terraform_outputs.outputs.instance_id.value }}"
+        GF_ACCESS_KEY_ID: "{{ terraform_outputs.outputs.access_key_id.value }}"
+        GF_SECRET_ACCESS_KEY: "{{ terraform_outputs.outputs.secret_access_key.value }}"
+        AWS_REGION: "{{ AWS_REGION }}"
+
+- name: Configure Intance and Run Application
+  hosts: inception
+  become: true
+  gather_facts: false
+  vars:
+    instance_ip: "{{ hostvars['localhost']['instance_ip'] }}"
+    instance_id: "{{ hostvars['localhost']['instance_id'] }}"
+    GF_ACCESS_KEY_ID: "{{ hostvars['localhost']['GF_ACCESS_KEY_ID'] }}"
+    GF_SECRET_ACCESS_KEY: "{{ hostvars['localhost']['GF_SECRET_ACCESS_KEY'] }}"
+    AWS_REGION: "{{ hostvars['localhost']['AWS_REGION'] }}"
+  tasks:
+    - name: Copy Files
+      synchronize:
+        src: "{{ playbook_dir }}/../../inception/"
+        dest: /home/ubuntu/app/
+    - name: Add AWS credentials to environment
+      ansible.builtin.blockinfile:
+        path: "/home/ubuntu/app/.env"
+        block: |
+          AWS_REGION="{{ AWS_REGION }}"
+          GF_ACCESS_KEY_ID="{{ GF_ACCESS_KEY_ID }}"
+          GF_SECRET_ACCESS_KEY="{{ GF_SECRET_ACCESS_KEY }}"
+    - name: Update DOMAIN_NAME environment 
+      ansible.builtin.replace:
+        path: "/home/ubuntu/app/.env"
+        regexp: 'localhost'
+        replace: "{{  instance_ip  }}"
+    - name: Configure Grafana Dashboard
+      ansible.builtin.replace:
+        path: "/home/ubuntu/app/services/grafana/dashboards/files/ec2.json"
+        regexp: 'instanceid'
+        replace: "{{  instance_id  }}"
+    - name: Install build tools
+      apt:
+        name:
+          - docker.io
+          - docker-compose
+          - build-essential
+        state: present
+        update_cache: yes
+    - name: Run App
+      ansible.builtin.command:
+        cmd: make
+        chdir: /home/ubuntu/app/

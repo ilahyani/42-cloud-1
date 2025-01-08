@@ -1,10 +1,10 @@
 all: up
 
 up:
-	@mkdir -p ./data/mariadb ./data/wordpress && docker compose up --build -d
+	@mkdir -p ./data/mariadb ./data/wordpress && docker-compose up --build -d
 
 down:
-	@docker compose down
+	@docker-compose down
 
 clean: down
 	@docker volume ls -q | xargs docker volume rm
